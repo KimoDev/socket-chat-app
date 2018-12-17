@@ -21,6 +21,9 @@
         <form action="">
           <input id="msg" autocomplete="off" /><button>Send</button>
         </form>
+        <!-- <form id="pm" action="">
+                <input id="m" autocomplete="off" /><button>Send PM</button>
+              </form> -->
     <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
@@ -34,6 +37,17 @@
       $('#msg').val('');
       return false;
     });
+
+    // $('#pm').submit(function(){
+    //   socket.emit('private message', $('#m').val());
+    //   $('#m').val('');
+    //   return false;
+    // });
+    socket.on('user connected', () => {
+        console.log("user connected to the room");
+        $('#messages').append($('<li>').text("user connected to the room"));
+    });
+
     socket.on('chat message', function(msg){
         if (msg == "carmen" || msg == "Carmen" || msg == "CARMEN") {
             $('#messages').append($('<li>').text(`Oh hi ${msg}, btw i love you`));
