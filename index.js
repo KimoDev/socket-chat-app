@@ -30,17 +30,27 @@ app.get('/', function(req, res){
   io.on('connection', function (socket) {
     socket.broadcast.emit('user connected');
   });
+
+  // when the client emits 'add user', this listens and executes
+  io.on('connection', function (socket) {
+    socket.on('add user', (username) => {
+    //if (addedUser) return;
+
+    // we store the username in the socket session for this client
+    socket.username = username;
+    
+    //addedUser = true;
+    
+    
+    // echo globally (all clients) that a person has connected
+     socket.broadcast.emit('user joined', {
+       username: socket.username
+     });
+    
+    });
+  });
+
   
-//   io.on('connection', function (socket) {
-//     io.emit('this', { will: 'be received by everyone'});
-  
-//     socket.on('private message', function (from, msg) {
-//       console.log('I received a private message by ', from, ' saying ', msg);
-//     });
-
-//   });
-
-
 
 http.listen(port, function(){
   console.log('listening on *:3000');

@@ -17,13 +17,20 @@
     </style>
 </head>
 <body>
-        <ul id="messages"></ul>
-        <form action="">
-          <input id="msg" autocomplete="off" /><button>Send</button>
-        </form>
-        <!-- <form id="pm" action="">
-                <input id="m" autocomplete="off" /><button>Send PM</button>
-              </form> -->
+        <div class="login-page">
+                <div class="form">
+                  <h3 class="title">What's your nickname?</h3>
+                  <input class="usernameInput" type="text" maxlength="14" />
+                </div>
+            </div>
+
+        <div class="chat-page">    
+            <ul id="messages"></ul>
+                <form action="">
+                    <input id="msg" autocomplete="off" /><button>Send</button>
+                </form>
+        </div>
+        
     <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
@@ -31,18 +38,41 @@
     var socket = io();
 
     $(function () {
-    
+        var $usernameInput = $('.usernameInput');
+
+        const setUsername = () => {
+            username = $usernameInput.val().trim();
+
+            // If the username is valid
+            
+            $(".login-page").fadeOut();
+            $(".chat-page").show();
+
+            // Tell the server your username
+            socket.emit('add user', username);
+            console.log(username);
+            }
+        
+            $(".usernameInput").on('keyup', function (e) {
+            if (e.keyCode == 13) {
+                setUsername();
+            }
+        });
+
+        socket.on('user joined', (data) => {
+            $('#messages').append($('<li>').text(data.username + ' joined the chat'));
+        });
+
+    $(".chat-page").hide();
     $('form').submit(function(){
       socket.emit('chat message', $('#msg').val());
       $('#msg').val('');
       return false;
     });
 
-    // $('#pm').submit(function(){
-    //   socket.emit('private message', $('#m').val());
-    //   $('#m').val('');
-    //   return false;
-    // });
+
+  
+
     socket.on('user connected', () => {
         console.log("user connected to the room");
         $('#messages').append($('<li>').text("user connected to the room"));
