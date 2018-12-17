@@ -35,7 +35,7 @@
       return false;
     });
     socket.on('chat message', function(msg){
-        if (msg == "carmen" || "CARMEN" || "Carmen") {
+        if (msg == "carmen" || msg == "Carmen" || msg == "CARMEN") {
             $('#messages').append($('<li>').text(`Oh hi ${msg}, btw i love you`));
         } else {
       $('#messages').append($('<li>').text(msg));
